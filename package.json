@@ -1,0 +1,23 @@
+{
+  "name": "koademo",
+  "version": "1.0.0",
+  "description": "use koa2 with httpserver",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "koa",
+    "test"
+  ],
+  "engines": {
+    "node": ">=v7.6"
+  },
+  "author": "yohance",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.4.1",
+    "koa-router": "^7.3.0",
+    "log4js": "^2.3.12"
+  }
+}
