@@ -3,21 +3,25 @@ const path = require('path');
 const router = require('koa-router')();
 
 function addMapping(router, mapping) {
+	let pathArr, method, path;
 	for (var url in mapping) {
-		if (url.startsWith('GET ')) {
-			var path = url.substring(4);
+		pathArr = url.split(":");
+		if (pathArr.length < 2) {
+			console.warn(`invalid URL: ${url}`);
+			continue;
+		}
+		method = pathArr[0].trim().toUpperCase();
+		path = pathArr[1].trim();
+		if (method === "GET") {
 			router.get(path, mapping[url]);
 			console.log(`register URL mapping: GET ${path}`);
-		} else if (url.startsWith('POST ')) {
-			var path = url.substring(5);
+		} else if (method === "POST") {
 			router.post(path, mapping[url]);
 			console.log(`register URL mapping: POST ${path}`);
-		} else if (url.startsWith('PUT ')) {
-			var path = url.substring(4);
+		} else if (method === "PUT") {
 			router.put(path, mapping[url]);
 			console.log(`register URL mapping: PUT ${path}`);
-		} else if (url.startsWith('DELETE ')) {
-			var path = url.substring(7);
+		} else if (method === "DELETE") {
 			router.del(path, mapping[url]);
 			console.log(`register URL mapping: DELETE ${path}`);
 		} else {
@@ -42,7 +46,7 @@ module.exports = function (dir) {
 		console.error('=====controller dir is not exist=====');
 		return;
 	}
-	console.log('=====>>>parse controller dir:'+controllersDir);
+	console.log('=====>>>parse controller dir:' + controllersDir);
 	addControllers(router, controllersDir);
 	return router.routes();
 };
