@@ -39,9 +39,10 @@ function addControllers(router, dir) {
 module.exports = function (dir) {
 	var controllersDir = dir || __dirname + '../controller';
 	if (!fs.existsSync(dir)) {
-		console.error('controller dir is not exist');
+		console.error('=====controller dir is not exist=====');
 		return;
 	}
+	console.log('=====>>>parse controller dir:'+controllersDir);
 	addControllers(router, controllersDir);
 	return router.routes();
 };

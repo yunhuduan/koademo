@@ -2,11 +2,8 @@ const path = require('path');
 const Koa = require('koa');
 const app = new Koa();
 const config = require('./config');
-console.log(path.resolve(__dirname + '/app/controller'))
-const mappingRouter = require('./app/com/MappingRouter');
-
-console.log(path.resolve(__dirname + '/app/controller'))
-app.use(mappingRouter(path.resolve(__dirname + '/app/controller')));
+const mappingRouter = require('./com/MappingRouter');
+app.use(mappingRouter(path.resolve(__dirname + '/controller')));
 
 // 响应
 app.use(ctx => {
