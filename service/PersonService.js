@@ -1,28 +1,24 @@
 const Person = require('../dao/PersonDao');
 
-
-
-
-async function  addPerson(person){
+function addPerson(person){
 	let now = Date.now();
-	let p = await Person.create({
-		id: 'g-' + now,
-		name: 'Gaffey',
-		gender: false,
-		birth: '2007-07-07',
-		createdAt: now,
-		updatedAt: now
-	});
+	let p = Person.create(person);
 	return p;
 };
 
-async function findById() {
-	let p = Person.findById('g-1512486677842');
+function findById(id) {
+	let p = Person.findById(id);
 	return p
+}
+
+function findAll() {
+	let ps = Person.findAll();
+	return ps;
 }
 
 module.exports = {
 	addPerson,
-	findById
+	findById,
+	findAll
 }
 
