@@ -7,7 +7,7 @@ var config = require('../config/redisConfig')
  */
 const factory = {
 	create: function () {
-		return new Redis(config.port,config.host,config.options);
+		return new Redis(config.port, config.host, config.options);
 	},
 	destroy: function (client) {
 		client.quit();
@@ -33,19 +33,52 @@ process.on('exit', (code) => {
 	});
 });
 
-async function get(key){
+async function set(key, val, seconds) {
+	var client = await redisPool.acquire();
+	await client.set(key, val);
+	await client.expire(key, seconds || 600);
+	await redisPool.release(client);
+}
+
+async function get(key) {
 	var client = await redisPool.acquire();
 	var res = await client.get(key);
 	await redisPool.release(client);
 	return res;
 }
 
-async function set(key,val){
+async function hmset(key, obj, seconds) {
 	var client = await redisPool.acquire();
-	await client.set(key,val);
+	await client.hmset(key, obj);
+	await client.expire(key, seconds || 600);
+	await redisPool.release(client);
+}
+
+async function hgetall(key) {
+	var client = await redisPool.acquire();
+	var res = await client.hgetall(key);
+	await redisPool.release(client);
+	return res;
+}
+
+async function exists(key) {
+	var client = await redisPool.acquire();
+	var res = await client.exists(key);
+	await redisPool.release(client);
+	return res === 1;
+}
+
+async function expire(key, seconds) {
+	var client = await redisPool.acquire();
+	var res = await client.expire(key, seconds || 600);
+	await redisPool.release(client);
 }
 
 module.exports = {
 	get,
-	set
+	set,
+	hmset,
+	hgetall,
+	exists,
+	expire
 }

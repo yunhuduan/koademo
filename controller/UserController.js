@@ -6,7 +6,9 @@ var getUserinfo = async (ctx, next) => {
 	console.log(ctx.request.body)
 	console.log(ctx.params)
 	var redisData = await Redis.get('query_id' + ctx.params.id);
-	console.log('redis get redisData:' + redisData)
+	console.log('redis get redisData:' + redisData);
+	var hash = await Redis.hgetall('hashtest');
+	console.log('redis hashtest:' + JSON.stringify(hash))
 	let p = await PersonService.findById(ctx.params.id);
 	ctx.response.body = JSON.stringify(p);
 	return next();
@@ -25,6 +27,7 @@ var saveUserinfo = async (ctx, next) => {
 		updatedAt: now
 	};
 	await Redis.set('query_id' + person.id, JSON.stringify(person));
+	await Redis.hmset('hashtest', {a: 1, b: 2});
 	var p = await PersonService.addPerson(person);
 	console.log('add succ:' + p)
 	ctx.response.type = 'text/html';
@@ -42,8 +45,20 @@ var findAll = async (ctx, next) => {
 	return next();
 };
 
+var exist = async (ctx, next) => {
+	var exist = await Redis.exists(ctx.params.key);
+	ctx.response.body = ctx.params.key + ':' + exist
+}
+
+var expire = async (ctx, next) => {
+	await Redis.expire(ctx.params.key, ctx.params.time || 0);
+	ctx.response.body = ctx.params.key + 'expired'
+}
+
 module.exports = {
 	'GET : /getUserinfo': getUserinfo,
 	'GET : /saveUserinfo': saveUserinfo,
+	'GET : /exist' : exist,
+	'GET : /expire' : expire,
 	'GET : /findall': findAll
 };
