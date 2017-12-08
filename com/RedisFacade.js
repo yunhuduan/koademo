@@ -2,9 +2,6 @@ var genericPool = require("generic-pool");
 var Redis = require('ioredis');
 var config = require('../config/redisConfig')
 
-/**
- * Step 1 - Create pool using a factory object
- */
 const factory = {
 	create: function () {
 		return new Redis(config.port, config.host, config.options);
@@ -14,18 +11,8 @@ const factory = {
 	}
 };
 
-const opts = {
-	max: 10, // maximum size of the pool
-	min: 2 // minimum size of the pool
-};
+const redisPool = genericPool.createPool(factory, config.poolops);
 
-const redisPool = genericPool.createPool(factory, opts);
-
-/**
- * Step 3 - Drain pool during shutdown (optional)
- */
-// Only call this once in your application -- at the point you want
-// to shutdown and stop using this pool.
 process.on('exit', (code) => {
 	console.log(`process to exit with code: ${code}`);
 	redisPool.drain().then(function () {
@@ -33,6 +20,13 @@ process.on('exit', (code) => {
 	});
 });
 
+/**
+ * redis中添加key的值
+ * @param key redis中key
+ * @param val 设置的值
+ * @param seconds 设置失效时间单位秒
+ * @returns {Promise.<void>}
+ */
 async function set(key, val, seconds) {
 	var client = await redisPool.acquire();
 	await client.set(key, val);
@@ -40,6 +34,11 @@ async function set(key, val, seconds) {
 	await redisPool.release(client);
 }
 
+/**
+ * redis中根据key获取值
+ * @param key redis中key
+ * @returns {Promise.<*>}
+ */
 async function get(key) {
 	var client = await redisPool.acquire();
 	var res = await client.get(key);
@@ -47,6 +46,13 @@ async function get(key) {
 	return res;
 }
 
+/**
+ * redis中添加hash值
+ * @param key key
+ * @param obj 对象
+ * @param seconds 失效时间单位秒
+ * @returns {Promise.<void>}
+ */
 async function hmset(key, obj, seconds) {
 	var client = await redisPool.acquire();
 	await client.hmset(key, obj);
@@ -54,6 +60,11 @@ async function hmset(key, obj, seconds) {
 	await redisPool.release(client);
 }
 
+/**
+ * 从redis中获取hash值
+ * @param key
+ * @returns {Promise.<*>}
+ */
 async function hgetall(key) {
 	var client = await redisPool.acquire();
 	var res = await client.hgetall(key);
@@ -61,6 +72,11 @@ async function hgetall(key) {
 	return res;
 }
 
+/**
+ * 判断redis中是否存在key
+ * @param key
+ * @returns {Promise.<boolean>}
+ */
 async function exists(key) {
 	var client = await redisPool.acquire();
 	var res = await client.exists(key);
@@ -68,10 +84,29 @@ async function exists(key) {
 	return res === 1;
 }
 
+/**
+ * 设置redis中key的失效时间
+ * @param key
+ * @param seconds
+ * @returns {Promise.<void>}
+ */
 async function expire(key, seconds) {
 	var client = await redisPool.acquire();
 	var res = await client.expire(key, seconds || 600);
 	await redisPool.release(client);
+}
+
+/**
+ * 执行redis中其他方法,不建议直接使用
+ * @param funcName 方法名如: get ,set等
+ * @param args 指向funcName的参数如: funcName=get时 args = ['key']
+ * @returns {Promise.<*>}
+ */
+async function exec(funcName,args){
+	var client = await redisPool.acquire();
+	var res = await client[funcName].apply(client,args);
+	await redisPool.release(client);
+	return res;
 }
 
 module.exports = {
@@ -80,5 +115,6 @@ module.exports = {
 	hmset,
 	hgetall,
 	exists,
-	expire
+	expire,
+	exec
 }

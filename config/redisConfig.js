@@ -6,5 +6,10 @@ module.exports = {
 		password: '',
 		connectTimeout: 10000,
 		keyPrefix: 'koademo:'
+	},
+	//redis pool config
+	poolops: {
+		min: 2,
+		max: 10
 	}
 }

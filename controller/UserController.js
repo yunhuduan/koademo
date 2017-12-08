@@ -55,10 +55,16 @@ var expire = async (ctx, next) => {
 	ctx.response.body = ctx.params.key + 'expired'
 }
 
+var exec = async (ctx,next)=>{
+	var res = await Redis.exec(ctx.params.func, [ctx.params.arg]);
+	ctx.response.body = ctx.params.func + ' exec res:'+res
+}
+
 module.exports = {
 	'GET : /getUserinfo': getUserinfo,
 	'GET : /saveUserinfo': saveUserinfo,
 	'GET : /exist' : exist,
 	'GET : /expire' : expire,
+	'GET : /exec' : exec,
 	'GET : /findall': findAll
 };
