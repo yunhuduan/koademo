@@ -1,3 +1,7 @@
+/**
+ * 数据库配置信息,当前是mysql
+ * @type {{database: string, username: string, password: string, options: {host: string, port: string, dialect: string, pool: {max: number, min: number, idle: number, acquire: number}}}}
+ */
 module.exports = {
 	database: 'zx_cnpmjs',
 	username: 'zx_cnpmjs',

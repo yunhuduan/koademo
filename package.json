@@ -17,9 +17,12 @@
 	"author": "yohance",
 	"license": "MIT",
 	"dependencies": {
+		"generic-pool": "^3.2.0",
+		"ioredis": "^3.2.2",
 		"koa": "^2.4.1",
 		"koa-body": "^2.5.0",
 		"koa-router": "^7.3.0",
+		"koa-session": "^5.5.1",
 		"log4js": "^2.3.12",
 		"mysql2": "^1.5.1",
 		"sequelize": "^4.26.0"

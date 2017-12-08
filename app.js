@@ -5,8 +5,17 @@ const app = new Koa();
 const config = require('./config');
 const mappingRouter = require('./com/MappingRouter');
 const qs = require('./com/middleware/query-string')
+const cors = require('./com/middleware/cors')
 
+//queryString中间件
 app.use(qs());
+
+//跨域中间件
+app.use(cors({
+	allowHeaders:['Content-Type','Content-Length'],
+	maxAge: 1800,
+	credentials:true
+}));
 
 app.use(koaBody({
 	multipart: true
