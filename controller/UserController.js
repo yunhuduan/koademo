@@ -5,12 +5,18 @@ var getUserinfo = async (ctx, next) => {
 	ctx.response.type = 'text/html';
 	console.log(ctx.request.body)
 	console.log(ctx.params)
+	//redis测试
 	var redisData = await Redis.get('query_id' + ctx.params.id);
 	console.log('redis get redisData:' + redisData);
 	var hash = await Redis.hgetall('hashtest');
 	console.log('redis hashtest:' + JSON.stringify(hash))
+	//db测试
 	let p = await PersonService.findById(ctx.params.id);
 	ctx.response.body = JSON.stringify(p);
+	//session+redis测试
+	ctx.session.views = (ctx.session.views || 0) + 1;
+
+	ctx.session.params = ctx.params
 	return next();
 };
 
