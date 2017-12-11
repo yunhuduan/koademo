@@ -7,7 +7,9 @@ const mappingRouter = require('./com/MappingRouter');
 const qs = require('./com/middleware/query-string');
 const cors = require('./com/middleware/cors');
 const session = require('koa-session');
-const redis = require('./com/RedisFacade')
+const redis = require('./com/RedisFacade');
+
+let logger = require('./utils/logger');
 
 //queryString中间件
 app.use(qs());
@@ -35,17 +37,12 @@ const sessionConfig = {
 	httpOnly: true, /** (boolean) httpOnly or not (default true) */
 	signed: true, /** (boolean) signed or not (default true) */
 	rolling: false,/** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. default is false **/
-
 	store: {
 		get: async function(key,maxage,{rolling}){
-			console.log('get from redis');
-			console.log(key,maxage,rolling)
 			let res = await redis.get(key);
 			return JSON.parse(res);
 		},
 		set: async function(key, sess, maxAge, { rolling, changed }){
-			console.log('set to redis');
-			console.log(key,maxAge,rolling,changed)
 			return await redis.set(key,JSON.stringify(sess),maxAge/1000)
 		},
 		destroy: async function(key){
@@ -60,4 +57,12 @@ app.use(mappingRouter(path.resolve(__dirname + '/controller')));
 
 app.listen(config.port);
 
-console.log("server start on port:" + config.port);
+logger.debug("debug:" + config.port);
+
+logger.info("server start on port:" + config.port);
+
+logger.warn("warn:" + config.port);
+
+logger.error("error:" + config.port);
+
+logger.fatal("fatal:" + config.port);
