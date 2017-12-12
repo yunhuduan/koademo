@@ -1,4 +1,4 @@
-module.exports = function (options) {
+module.exports = function () {
 	return async function globalError (ctx, next) {
 		try {
 			await next();

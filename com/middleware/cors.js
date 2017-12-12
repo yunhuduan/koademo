@@ -11,17 +11,17 @@
 module.exports = function (options) {
 
 	const defaults = {
-		allowMethods: 'GET,HEAD,PUT,POST,DELETE,PATCH'
+		allowMethods: "GET,HEAD,PUT,POST,DELETE,PATCH"
 	};
 
 	options = Object.assign({}, defaults, options);
 
 	if (Array.isArray(options.allowMethods)) {
-		options.allowMethods = options.allowMethods.join(',');
+		options.allowMethods = options.allowMethods.join(",");
 	}
 
 	if (Array.isArray(options.allowHeaders)) {
-		options.allowHeaders = options.allowHeaders.join(',');
+		options.allowHeaders = options.allowHeaders.join(",");
 	}
 
 	if (options.maxAge) {
@@ -32,13 +32,13 @@ module.exports = function (options) {
 
 
 	return function cors(ctx, next) {
-		const requestOrigin = ctx.get('Origin');
+		const requestOrigin = ctx.get("Origin");
 		//this setting see: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin
-		ctx.response.vary('Origin');
+		ctx.response.vary("Origin");
 
 		//get origin
 		let origin;
-		if (typeof options.origin === 'function') {
+		if (typeof options.origin === "function") {
 			origin = options.origin(ctx);
 			if (!origin) {
 				return next();
@@ -47,34 +47,34 @@ module.exports = function (options) {
 			origin = options.origin || requestOrigin;
 		}
 
-		ctx.set('Access-Control-Allow-Origin', origin);
+		ctx.set("Access-Control-Allow-Origin", origin);
 
 		if (options.credentials === true) {
-			ctx.set('Access-Control-Allow-Credentials', 'true');
+			ctx.set("Access-Control-Allow-Credentials", "true");
 		}
 
 		if (options.maxAge) {
-			ctx.set('Access-Control-Max-Age', options.maxAge);
+			ctx.set("Access-Control-Max-Age", options.maxAge);
 		}
 
 		if (options.allowMethods) {
-			ctx.set('Access-Control-Allow-Methods', options.allowMethods);
+			ctx.set("Access-Control-Allow-Methods", options.allowMethods);
 		}
 
 		let allowHeaders = options.allowHeaders;
 		if (!allowHeaders) {
-			allowHeaders = ctx.get('Access-Control-Request-Headers');
+			allowHeaders = ctx.get("Access-Control-Request-Headers");
 		}
 		if (allowHeaders) {
-			ctx.set('Access-Control-Allow-Headers', allowHeaders);
+			ctx.set("Access-Control-Allow-Headers", allowHeaders);
 		}
 
-		if (ctx.request.method.toUpperCase() === 'OPTIONS') {
+		if (ctx.request.method.toUpperCase() === "OPTIONS") {
 			ctx.status = 204;
 		} else {
 			return next();
 		}
 
-	}
+	};
 
-}
+};
