@@ -20,7 +20,7 @@ module.exports = {
 			type: "stdout",
 			layout: {
 				type: "pattern",
-				pattern: "[%z][%c][%p][%d{yyyy-MM-dd-hh:mm:ss.SSS}]%m%n"
+				pattern: "[%z][%c][%p][%d{yyyy-MM-dd-hh:mm:ss.SSS}]%m"
 			}
 		},
 		dateFile: {
@@ -31,13 +31,28 @@ module.exports = {
 			keepFileExt: true,//保留文件的拓展名
 			layout: {
 				type: "pattern",
-				pattern: "[%z][%c][%p][%d{yyyy-MM-dd-hh:mm:ss.SSS}]%m%n"
+				pattern: "[%z][%c][%p][%d{yyyy-MM-dd-hh:mm:ss.SSS}]%m"
+			}
+		},
+		httpDateFile: {
+			type: "dateFile",
+			filename: "logs/app-http.log",
+			pattern: ".yyyyMMdd",//备份日志时文件名格式
+			compress: true,//是否压缩备份日志
+			keepFileExt: true,//保留文件的拓展名
+			layout: {
+				type: "pattern",
+				pattern: "[%p][%d{yyyy-MM-dd-hh:mm:ss.SSS}]%m"
 			}
 		}
 	},
 	categories: {
 		default: {
 			appenders: ["dateFile", "out"],
+			level: "info"
+		},
+		http:{
+			appenders: ['httpDateFile'],
 			level: "info"
 		}
 	}

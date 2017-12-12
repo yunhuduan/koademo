@@ -3,9 +3,13 @@ const log4js = require("log4js");
 
 log4js.configure(log4jsconfig);
 console.log("log4js config finished......");
-var logger = {};
+let log = log4js.getLogger();
 
-var log = log4js.getLogger();
+let httpLogger = log4js.getLogger("http");
+
+let logger = {
+	httpLogger
+};
 
 
 function formatMsg(args) {
@@ -21,10 +25,10 @@ function formatMsg(args) {
 }
 
 function getFormatMsg(msg, ctx) {
-	var session = ctx.session || {};
-	var userInfo = session.userInfo || {};
-	var ip= session.IP || "";
-	var userKey = (userInfo.id ? "[" + userInfo.id + "]" : "") + (ip ? "[" + ip + "]" : "");
+	let session = ctx.session || {};
+	let userInfo = session.userInfo || {};
+	let ip= session.IP || "";
+	let userKey = (userInfo.id ? "[" + userInfo.id + "]" : "") + (ip ? "[" + ip + "]" : "");
 	return userKey + getTextMsg(msg);
 }
 

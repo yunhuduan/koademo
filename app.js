@@ -10,10 +10,14 @@ const session = require("koa-session");
 const redis = require("./com/RedisFacade");
 const logger = require("./utils/logger");
 const globalError = require("./com/middleware/global-error");
+const httplog = require("./com/middleware/http-log");
 
 //全局error处理
 app.use(globalError());
-
+//http 请求日志
+app.use(httplog({
+	logger: logger.httpLogger
+}));
 //queryString中间件
 app.use(qs());
 
