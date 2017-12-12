@@ -1,3 +1,10 @@
+/**
+ * 系统http日志记录
+ * @param options {
+ *  logger:日志对象
+ * }
+ * @returns {function(*, *)}
+ */
 module.exports = function (options) {
 	let logger = options.logger || console;
 	return async (ctx, next) => {
