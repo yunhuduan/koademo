@@ -1,8 +1,8 @@
-const log4jsconfig = require('../config/log4jsconfig');
-const log4js = require('log4js');
+const log4jsconfig = require("../config/log4jsconfig");
+const log4js = require("log4js");
 
 log4js.configure(log4jsconfig);
-console.log('log4js config finished......')
+console.log("log4js config finished......");
 var logger = {};
 
 var log = log4js.getLogger();
@@ -18,18 +18,18 @@ function formatMsg(args) {
 	} else {
 		return getTextMsg(args[0]);
 	}
-};
+}
 
 function getFormatMsg(msg, ctx) {
 	var session = ctx.session || {};
 	var userInfo = session.userInfo || {};
-	var ip= session.IP || '';
-	var userKey = (userInfo.id ? '[' + userInfo.id + ']' : '') + (ip ? '[' + ip + ']' : '');
+	var ip= session.IP || "";
+	var userKey = (userInfo.id ? "[" + userInfo.id + "]" : "") + (ip ? "[" + ip + "]" : "");
 	return userKey + getTextMsg(msg);
-};
+}
 
 function getTextMsg(msg) {
-	if(typeof msg === 'object'){
+	if(typeof msg === "object"){
 		return JSON.stringify(msg);
 	}else{
 		return msg;
@@ -39,9 +39,9 @@ function getTextMsg(msg) {
 
 function getErrorMsg(error) {
 	if(!error){
-		return '';
+		return "";
 	}
-	return error.name + error.message + error.stack
+	return error.name + error.message + error.stack;
 }
 
 /**

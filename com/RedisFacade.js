@@ -1,6 +1,6 @@
-var genericPool = require("generic-pool");
-var Redis = require('ioredis');
-var config = require('../config/redisConfig')
+let genericPool = require("generic-pool");
+let Redis = require("ioredis");
+let config = require("../config/redisConfig");
 
 const factory = {
 	create: function () {
@@ -13,7 +13,7 @@ const factory = {
 
 const redisPool = genericPool.createPool(factory, config.poolops);
 
-process.on('exit', (code) => {
+process.on("exit", (code) => {
 	console.log(`process to exit with code: ${code}`);
 	redisPool.drain().then(function () {
 		redisPool.clear();
@@ -28,7 +28,7 @@ process.on('exit', (code) => {
  * @returns {Promise.<void>}
  */
 async function set(key, val, seconds) {
-	var client = await redisPool.acquire();
+	let client = await redisPool.acquire();
 	await client.set(key, val);
 	await client.expire(key, seconds || 600);
 	await redisPool.release(client);
@@ -40,8 +40,8 @@ async function set(key, val, seconds) {
  * @returns {Promise.<*>}
  */
 async function get(key) {
-	var client = await redisPool.acquire();
-	var res = await client.get(key);
+	let client = await redisPool.acquire();
+	let res = await client.get(key);
 	await redisPool.release(client);
 	return res;
 }
@@ -54,7 +54,7 @@ async function get(key) {
  * @returns {Promise.<void>}
  */
 async function hmset(key, obj, seconds) {
-	var client = await redisPool.acquire();
+	let client = await redisPool.acquire();
 	await client.hmset(key, obj);
 	await client.expire(key, seconds || 600);
 	await redisPool.release(client);
@@ -66,8 +66,8 @@ async function hmset(key, obj, seconds) {
  * @returns {Promise.<*>}
  */
 async function hgetall(key) {
-	var client = await redisPool.acquire();
-	var res = await client.hgetall(key);
+	let client = await redisPool.acquire();
+	let res = await client.hgetall(key);
 	await redisPool.release(client);
 	return res;
 }
@@ -78,8 +78,8 @@ async function hgetall(key) {
  * @returns {Promise.<boolean>}
  */
 async function exists(key) {
-	var client = await redisPool.acquire();
-	var res = await client.exists(key);
+	let client = await redisPool.acquire();
+	let res = await client.exists(key);
 	await redisPool.release(client);
 	return res === 1;
 }
@@ -91,8 +91,8 @@ async function exists(key) {
  * @returns {Promise.<void>}
  */
 async function expire(key, seconds) {
-	var client = await redisPool.acquire();
-	var res = await client.expire(key, seconds || 600);
+	let client = await redisPool.acquire();
+	await client.expire(key, seconds || 600);
 	await redisPool.release(client);
 }
 
@@ -103,8 +103,8 @@ async function expire(key, seconds) {
  * @returns {Promise.<*>}
  */
 async function exec(funcName,args){
-	var client = await redisPool.acquire();
-	var res = await client[funcName].apply(client,args);
+	let client = await redisPool.acquire();
+	let res = await client[funcName].apply(client,args);
 	await redisPool.release(client);
 	return res;
 }
@@ -117,4 +117,4 @@ module.exports = {
 	exists,
 	expire,
 	exec
-}
+};

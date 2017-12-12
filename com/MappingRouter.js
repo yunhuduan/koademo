@@ -1,6 +1,5 @@
-const fs = require('fs');
-const path = require('path');
-const router = require('koa-router')();
+const fs = require("fs");
+const router = require("koa-router")();
 
 function addMapping(router, mapping) {
 	let pathArr, method, path;
@@ -32,21 +31,21 @@ function addMapping(router, mapping) {
 
 function addControllers(router, dir) {
 	fs.readdirSync(dir).filter((f) => {
-		return f.endsWith('.js');
+		return f.endsWith(".js");
 	}).forEach((f) => {
 		console.log(`process controller: ${f}...`);
-		let mapping = require(dir + '/' + f);
+		let mapping = require(dir + "/" + f);
 		addMapping(router, mapping);
 	});
 }
 
 module.exports = function (dir) {
-	var controllersDir = dir || __dirname + '../controller';
+	var controllersDir = dir || __dirname + "../controller";
 	if (!fs.existsSync(dir)) {
-		console.error('=====controller dir is not exist=====');
+		console.error("=====controller dir is not exist=====");
 		return;
 	}
-	console.log('=====>>>parse controller dir:' + controllersDir);
+	console.log("=====>>>parse controller dir:" + controllersDir);
 	addControllers(router, controllersDir);
 	return router.routes();
 };

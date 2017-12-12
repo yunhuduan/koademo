@@ -1,14 +1,13 @@
-const Person = require('../dao/PersonDao');
+const Person = require("../dao/PersonDao");
 
 function addPerson(person){
-	let now = Date.now();
 	let p = Person.create(person);
 	return p;
-};
+}
 
 function findById(id) {
 	let p = Person.findById(id);
-	return p
+	return p;
 }
 
 function findAll() {
@@ -20,5 +19,5 @@ module.exports = {
 	addPerson,
 	findById,
 	findAll
-}
+};
 

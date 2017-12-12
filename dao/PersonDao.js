@@ -1,7 +1,7 @@
-const sequelize = require('../db/MysqlSequelize');
+const sequelize = require("../db/MysqlSequelize");
 const Sequelize = require("sequelize");
 
-const Person = sequelize.define('person', {
+const Person = sequelize.define("person", {
 	id: {
 		type: Sequelize.STRING(50),
 		primaryKey: true
@@ -13,7 +13,7 @@ const Person = sequelize.define('person', {
 	updatedAt: Sequelize.BIGINT
 },{
 	timestamps: false,
-	tableName: 'person'
+	tableName: "person"
 });
 
-module.exports = Person
+module.exports = Person;
