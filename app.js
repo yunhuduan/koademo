@@ -11,15 +11,15 @@ const redis = require("./com/RedisFacade");
 const logger = require("./utils/logger");
 const globalError = require("./com/middleware/global-error");
 const httplog = require("./com/middleware/http-log");
-
+const auth = require("./com/middleware/auth");
 //全局error处理
-app.use(globalError());
+app.use(globalError({
+	logger: logger
+}));
 //http 请求日志
 app.use(httplog({
 	logger: logger.httpLogger
 }));
-//queryString中间件
-app.use(qs());
 
 //跨域中间件
 app.use(cors({
@@ -27,6 +27,9 @@ app.use(cors({
 	maxAge: 1800,
 	credentials: true
 }));
+
+//queryString中间件
+app.use(qs());
 
 app.use(koaBody({
 	multipart: true
@@ -63,6 +66,13 @@ const sessionConfig = {
 };
 
 app.use(session(sessionConfig, app));
+
+//auth
+app.use(auth({
+	valid: async function (ctx) {
+		return !!ctx.session.userInfo;
+	}
+}));
 
 app.use(mappingRouter(path.resolve(__dirname + "/controller")));
 
