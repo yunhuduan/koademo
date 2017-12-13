@@ -16,4 +16,8 @@ const Person = sequelize.define("person", {
 	tableName: "person"
 });
 
+Person.listTotal = function(){
+	return sequelize.query('select p.*, ifnull(s.c , 0) c from person p left join( select pid , count(pl.pid) c from person_log pl group by pl.pid) s on p.id = s.pid');
+};
+
 module.exports = Person;

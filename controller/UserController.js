@@ -56,6 +56,13 @@ let findAll = async (ctx, next) => {
 	return next();
 };
 
+let listTotal = async (ctx,next) => {
+	let list = await PersonService.listTotal();
+	ctx.response.type = "text/html";
+	ctx.response.body = JSON.stringify(list);
+	return next();
+};
+
 let exist = async (ctx, next) => {
 	let exist = await Redis.exists(ctx.params.key);
 	ctx.response.body = ctx.params.key + ":" + exist;
@@ -80,5 +87,6 @@ module.exports = {
 	"GET : /exist": exist,
 	"GET : /expire": expire,
 	"GET : /exec": exec,
-	"GET : /findall": findAll
+	"GET : /findall": findAll,
+	"GET : /listTotal": listTotal
 };

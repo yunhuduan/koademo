@@ -1,3 +1,10 @@
+const logger = require("./utils/logger");
+console.log = logger.info;//replace console.log info
+console.debug = logger.debug;
+console.info = logger.info;
+console.warn = logger.warn;
+console.error = logger.error;
+
 const path = require("path");
 const Koa = require("koa");
 const koaBody = require("koa-body");
@@ -8,7 +15,6 @@ const qs = require("./com/middleware/query-string");
 const cors = require("./com/middleware/cors");
 const session = require("koa-session");
 const redis = require("./com/RedisFacade");
-const logger = require("./utils/logger");
 const globalError = require("./com/middleware/global-error");
 const httplog = require("./com/middleware/http-log");
 const auth = require("./com/middleware/auth");
@@ -69,6 +75,7 @@ app.use(session(sessionConfig, app));
 
 //auth
 app.use(auth({
+	excludePaths:['/getUserinfo'],
 	valid: async function (ctx) {
 		return !!ctx.session.userInfo;
 	}

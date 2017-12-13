@@ -14,10 +14,14 @@ function findAll() {
 	let ps = Person.findAll();
 	return ps;
 }
+function listTotal(){
+	return Person.listTotal();
+}
 
 module.exports = {
 	addPerson,
 	findById,
-	findAll
+	findAll,
+	listTotal
 };
 
