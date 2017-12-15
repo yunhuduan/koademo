@@ -11,9 +11,6 @@ const Person = sequelize.define("person", {
 	birth: Sequelize.STRING(10),
 	createdAt: Sequelize.BIGINT,
 	updatedAt: Sequelize.BIGINT
-},{
-	timestamps: false,
-	tableName: "person"
 });
 
 Person.listTotal = function(){

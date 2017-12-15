@@ -15,7 +15,13 @@ module.exports = {
 			min:5,
 			idle: 10000,//The maximum time, in milliseconds, that a connection can be idle before being released.
 			acquire: 10000//The maximum time, in milliseconds, that pool will try to get connection before throwing error
-		}
+		},
+		define: {
+			underscored: true,
+			freezeTableName: true,
+			charset: 'utf8',
+			timestamps: false
+		},
 
 	}
 };
